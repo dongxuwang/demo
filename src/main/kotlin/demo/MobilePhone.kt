@@ -1,12 +1,13 @@
-package org.example.demo
+package demo
 
 import java.time.LocalDateTime
 
-data class Phone(
+data class MobilePhone(
     val id: Int,
-    val name: String,
+    var name: String,
     var available: Boolean,
     var bookedTime: LocalDateTime?,
+    var restoredTime: LocalDateTime?,
     var bookedUser: String?,
     var technology: String? = null,
     var bands2g: String? = null,
