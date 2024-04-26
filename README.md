@@ -5,6 +5,7 @@ Mobile Phone Booking Service
 A mock api has been built for dummy request data from fonoapi because which has been down
 
 ### Usage:
+Could also check `src/test/kotlin/example/BookServiceTest.kt` for service examples
 
 ```kotlin
 // 1. get service
@@ -16,6 +17,6 @@ if (phoneResult.isSuccess) {
     // 3. do testing on the phone
     // ...
     // 4. and then return it
-    bookingService.restore(phone.id)
+    bookingService.restore(phone.name)
 }
 ```

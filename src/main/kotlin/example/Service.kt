@@ -36,4 +36,6 @@ class BookService(private val datasource: List<Phone> = Phones.datasource) : Ser
         return Result.success(Unit)
     }
 
+    // TODO some other useful functions
+
 }

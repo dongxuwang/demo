@@ -2,7 +2,6 @@ package example
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
 import kotlin.test.*
 
 class BookServiceTest {
@@ -47,7 +46,7 @@ class BookServiceTest {
     @Test
     fun `should restore by name`() {
         datasource.forEach { it.availability = false }
-        
+
         val actual = target.restore("Samsung Galaxy S9")
         assertTrue(actual.isSuccess)
     }

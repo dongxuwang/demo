@@ -27,10 +27,8 @@ data class Phone(
 
 fun Phone.isAvailable() = availability
 
-data class MyStateObject(val name: String, val age: Int)
 object Phones {
 
-    val mapper = jacksonObjectMapper()
     val datasource = listOf(
         Phone(1, Device("Samsung Galaxy S9", "Samsung")),
         Phone(2, Device("Samsung Galaxy S8", "Samsung")),
@@ -45,29 +43,35 @@ object Phones {
     )
 
     init {
-        val client = HttpClient.newHttpClient();
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.jsonserver.io/getdevice"))
-            .header("Accept", "application/json")
-            .header("X-Jsio-Token", "cd8cbd92d0174d253721ed85655fc3d8")
-            .GET()
-            .build()
+        val mapper = jacksonObjectMapper()
+        // fetching dummy data from mocked fonoapi
+        runCatching {
+            val client = HttpClient.newHttpClient()
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.jsonserver.io/getdevice"))
+                .header("Accept", "application/json")
+                .header("X-Jsio-Token", "cd8cbd92d0174d253721ed85655fc3d8")
+                .GET()
+                .build()
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        val device = mapper.readValue<List<Device>>(response.body())[0]
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+            val device = mapper.readValue<List<Device>>(response.body())[0]
 
-        datasource.forEach { phone ->
-            phone.device.also {
-                it.technology = device.technology
-                it._2gband = device._2gband
-                it._3gband = device._3gband
-                it._4gband = device._4gband
+            datasource.forEach { phone ->
+                phone.device.also {
+                    it.technology = device.technology
+                    it._2gband = device._2gband
+                    it._3gband = device._3gband
+                    it._4gband = device._4gband
+                }
             }
         }
+
     }
 
+    // For testing talking to the mocked api
     @JvmStatic
     fun main(args: Array<String>) {
-        Phones.datasource.forEach { println(it) }
+        datasource.forEach { println(it) }
     }
 }
