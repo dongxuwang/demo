@@ -1,6 +1,9 @@
 Mobile Phone Booking Service
 ============================
 
+### Assumption:
+A mock api has been built for dummy request data from fonoapi because which has been down
+
 ### Usage:
 
 ```kotlin

@@ -1,14 +1,20 @@
 package example
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.time.LocalDateTime
 
 data class Device(
     val name: String,
     val brand: String,
     var technology: String? = null,
-    var _2gBand: String? = null,
-    var _3gBand: String? = null,
-    var _4gBand: String? = null,
+    var _2gband: String? = null,
+    var _3gband: String? = null,
+    var _4gband: String? = null,
 )
 
 data class Phone(
@@ -21,7 +27,10 @@ data class Phone(
 
 fun Phone.isAvailable() = availability
 
+data class MyStateObject(val name: String, val age: Int)
 object Phones {
+
+    val mapper = jacksonObjectMapper()
     val datasource = listOf(
         Phone(1, Device("Samsung Galaxy S9", "Samsung")),
         Phone(2, Device("Samsung Galaxy S8", "Samsung")),
@@ -36,8 +45,29 @@ object Phones {
     )
 
     init {
-        datasource.forEach { }
+        val client = HttpClient.newHttpClient();
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.jsonserver.io/getdevice"))
+            .header("Accept", "application/json")
+            .header("X-Jsio-Token", "cd8cbd92d0174d253721ed85655fc3d8")
+            .GET()
+            .build()
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        val device = mapper.readValue<List<Device>>(response.body())[0]
+
+        datasource.forEach { phone ->
+            phone.device.also {
+                it.technology = device.technology
+                it._2gband = device._2gband
+                it._3gband = device._3gband
+                it._4gband = device._4gband
+            }
+        }
     }
 
-    fun findByDeviceName(name: String): List<Phone> = datasource.filter { name == it.device.name }
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Phones.datasource.forEach { println(it) }
+    }
 }

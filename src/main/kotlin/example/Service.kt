@@ -9,7 +9,7 @@ interface Service {
 
 class BookService(private val datasource: List<Phone> = Phones.datasource) : Service {
     override fun book(name: String, user: String): Result<Phone> {
-        val phones = Phones.findByDeviceName(name)
+        val phones = datasource.filter { name == it.device.name }
         if (phones.isEmpty()) {
             return Result.failure(NoSuchElementException("No phone with name $name found"))
         }
@@ -24,7 +24,7 @@ class BookService(private val datasource: List<Phone> = Phones.datasource) : Ser
     }
 
     override fun restore(name: String): Result<Unit> {
-        val phones = Phones.findByDeviceName(name)
+        val phones = datasource.filter { name == it.device.name }
         if (phones.isEmpty()) {
             return Result.failure(NoSuchElementException("No phone with name $name found"))
         }
